@@ -10,7 +10,7 @@ import lombok.*;
 @Getter
 @Setter
 @Entity
-@Table (name = "streming")
+@Table (name = "streaming")
 public class Streaming {
 
 
