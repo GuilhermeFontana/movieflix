@@ -25,9 +25,8 @@ public class CategoryController {
     }
 
 
-
     @GetMapping()
-    public ResponseEntity<List<CategoryResponse>> getAllCategorys(){
+    public ResponseEntity<List<CategoryResponse>> getAllCategorys() {
         List<CategoryResponse> categories = categoryService.findAll()
                 .stream()
                 .map(CategoryMapper::toCategoryResponse)
@@ -38,23 +37,24 @@ public class CategoryController {
 
 
     @PostMapping()
-    public ResponseEntity <CategoryResponse> saveCategory(@RequestBody CategoryRequest request){
-    Category newCategory = CategoryMapper.tocategory(request);
-    Category savedCategory = categoryService.saveCategory(newCategory);
-    return ResponseEntity.status(HttpStatus.CREATED).body(CategoryMapper.toCategoryResponse(savedCategory));
+    public ResponseEntity<CategoryResponse> saveCategory(@RequestBody CategoryRequest request) {
+        Category newCategory = CategoryMapper.tocategory(request);
+        Category savedCategory = categoryService.saveCategory(newCategory);
+        return ResponseEntity.status(HttpStatus.CREATED).body(CategoryMapper.toCategoryResponse(savedCategory));
     }
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<CategoryResponse> getCategoryId (@PathVariable Long id){
-       return categoryService.gettByCategoryId(id)
-               .map(category -> ResponseEntity.ok(CategoryMapper.toCategoryResponse(category)))
-               .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<CategoryResponse> getCategoryId(@PathVariable Long id) {
+        return categoryService.gettByCategoryId(id)
+                .map(category -> ResponseEntity.ok(CategoryMapper.toCategoryResponse(category)))
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/{id}")
-    public void deleteById (@PathVariable Long id){
+    public ResponseEntity<Void> deleteById(@PathVariable Long id) {
         categoryService.deletar(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
 
