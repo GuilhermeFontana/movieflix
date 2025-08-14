@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -29,6 +30,50 @@ public class MovieService {
         return repository.findAll();
     }
 
+
+    public Optional<Movie> findById(Long id){
+        return repository.findById(id);
+    }
+
+
+    public Optional<Movie> update (Long movieid, Movie updateMovie){
+      Optional<Movie> optMovie = repository.findById(movieid);
+      if (optMovie.isPresent()){
+
+          List<Category> categories = this.findCategories(updateMovie.getCategories());
+          List<Streaming> streaming = this.findStreaming(updateMovie.getStreamings());
+
+          Movie movie = optMovie.get();
+          movie.setTitle(updateMovie.getTitle());
+          movie.setDescription(updateMovie.getDescription());
+          movie.setReleaseDate(updateMovie.getReleaseDate());
+          movie.setRating(updateMovie.getRating());
+
+          movie.getCategories().clear();
+          movie.getCategories().addAll(categories);
+
+          movie.getStreamings().clear();
+          movie.getStreamings().addAll(streaming);
+
+          repository.save(movie);
+          return Optional.of(movie);
+      }
+
+      return Optional.empty();
+
+    }
+
+    public void deletar(Long id){
+        repository.deleteById(id);
+    }
+
+
+    public List<Movie> findByCategory(Long categoryId){
+        return repository.findByCategories(List.of(Category.builder().id(categoryId).build()));
+    }
+
+
+
     private List<Category> findCategories(List<Category> categories){
         List<Category> categoriesFound = new ArrayList<>();
         categories.forEach(category ->
@@ -42,6 +87,12 @@ public class MovieService {
                 streamingService.gettByCategoryId(streaming.getId()).ifPresent(streamingFound::add));
         return streamingFound;
     }
+
+
+
+
+
+
 
 
 
