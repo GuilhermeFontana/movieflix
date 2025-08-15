@@ -16,6 +16,7 @@ spring:
     enabled: true
     repair-at-start: true
 
+
 movieflix:
   security:
     secret: "palavra-secreta"
